@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -11,4 +12,71 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  salary      String?
+  jobType     String   @default("full-time") // full-time, contract, etc.
+  locationType String  @default("on-site") // on-site, remote, hybrid
+  
+  // Relations
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  
+  locationId  String?
+  location    Location? @relation(fields: [locationId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // SEO specific
+  metaTitle       String?
+  metaDescription String?
+  
+  @@index([slug])
+  @@index([categoryId])
+  @@index([locationId])
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logo        String?
+  description String?
+  website     String?
+  
+  jobs        Job[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  
+  jobs        Job[]
+  
+  @@index([slug])
+}
+
+model Location {
+  id          String   @id @default(cuid())
+  city        String
+  state       String
+  slug        String   @unique // e.g., "in-san-francisco-ca"
+  
+  jobs        Job[]
+  
+  @@index([slug])
 }
