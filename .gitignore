@@ -41,3 +41,13 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# Plugin SDK
+plugin-sdk/node_modules
+plugin-sdk/dist
+plugin-sdk/.turbo
+plugin-sdk/*.tsbuildinfo
+
+# Misc
+*.log
+.DS_Store
