@@ -50,27 +50,36 @@ export function generateCategoryLocationTitle(category: string, location: string
     .replace('{Count}', count.toString());
 }
 
-export function generateJobPostingSchema(job: Job) {
+export function generateJobPostingSchema(job: any) {
+  // Prisma uses createdAt, Mock uses postedAt. Handle both.
+  const postedDate = job.postedAt || job.createdAt || new Date().toISOString();
+  const dateObj = new Date(postedDate);
+  const validThroughDate = new Date(dateObj.getTime() + 90 * 24 * 60 * 60 * 1000);
+
+  // Safety check for invalid dates
+  const finalPostedDate = isNaN(dateObj.getTime()) ? new Date().toISOString() : dateObj.toISOString();
+  const finalValidThrough = isNaN(validThroughDate.getTime()) ? new Date(Date.now() + 7776000000).toISOString() : validThroughDate.toISOString();
+
   return {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: job.title,
     description: job.description,
-    datePosted: job.postedAt,
-    validThrough: new Date(new Date(job.postedAt).getTime() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-    employmentType: job.type.toUpperCase().replace('-', '_'),
+    datePosted: finalPostedDate,
+    validThrough: finalValidThrough,
+    employmentType: job.type ? job.type.toUpperCase().replace('-', '_') : 'FULL_TIME',
     hiringOrganization: {
       '@type': 'Organization',
-      name: job.company.name,
-      sameAs: job.company.website,
-      logo: job.company.logoUrl
+      name: job.company?.name || 'Confidential',
+      sameAs: job.company?.website,
+      logo: job.company?.logoUrl
     },
     jobLocation: {
       '@type': 'Place',
       address: {
         '@type': 'PostalAddress',
-        addressLocality: job.location.split(', ')[0],
-        addressRegion: job.location.split(', ')[1],
+        addressLocality: job.location ? job.location.split(', ')[0] : 'Remote',
+        addressRegion: job.location ? job.location.split(', ')[1] : '',
         addressCountry: 'US'
       }
     }

@@ -1,9 +1,9 @@
-import { db } from '@/lib/mock-db';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { generateJobTitle, generateJobPostingSchema } from '@/lib/seo';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
+import { ApplyForm } from './ApplyForm'; // New Client Component
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -11,7 +11,10 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const slug = (await params).slug;
-    const job = db.getJobBySlug(slug);
+    const job = await prisma.job.findUnique({
+        where: { slug },
+        include: { company: true }
+    });
 
     if (!job) return {};
 
@@ -28,7 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function JobViewPage({ params }: Props) {
     const slug = (await params).slug;
-    const job = db.getJobBySlug(slug);
+    const job = await prisma.job.findUnique({
+        where: { slug },
+        include: { company: true }
+    });
 
     if (!job) {
         notFound();
@@ -43,7 +49,7 @@ export default async function JobViewPage({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <Link href={`/jobs/${job.categorySlug}`} className="text-sm text-blue-400 hover:text-blue-300 mb-6 inline-block">
+            <Link href={`/jobs/${job.category}`} className="text-sm text-blue-400 hover:text-blue-300 mb-6 inline-block">
                 ← Back to {job.category}
             </Link>
 
@@ -63,14 +69,12 @@ export default async function JobViewPage({ params }: Props) {
                                 📍 {job.location}
                             </span>
                             <span className="flex items-center gap-1">
-                                🕒 Posted {new Date(job.postedAt).toLocaleDateString()}
+                                🕒 Posted {new Date(job.createdAt).toLocaleDateString()}
                             </span>
                         </div>
                     </div>
                     <div>
-                        <button className="px-6 py-3 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-200 transition-colors shadow-lg shadow-white/10">
-                            Apply Now
-                        </button>
+                        {/* Apply Button moved to Client Component */}
                     </div>
                 </div>
                 {/* Background Glow */}
@@ -81,22 +85,15 @@ export default async function JobViewPage({ params }: Props) {
                 {/* Main Content */}
                 <div>
                     <div className="prose prose-invert max-w-none text-slate-300 mb-12">
-                        <div dangerouslySetInnerHTML={{ __html: job.description }} />
+                        {/* Assuming description is markdown or text */}
+                        <p>{job.description}</p>
                     </div>
 
-                    {/* === PLUG-IN CONTAINER === */}
-                    {/* 
-                       This is the integration point for the FinalRoundAI plugin.
-                       It is placed strategically after the description but before the application section.
-                    */}
-                    <div
-                        id="plugin-container"
-                        className="my-10 min-h-[100px]"
-                        data-job-id={job.id}
-                        data-job-title={job.title}
-                        data-company={job.company.name}
-                    ></div>
-                    {/* === END PLUG-IN CONTAINER === */}
+                    {/* Apply Form Section */}
+                    <div className="my-10 p-6 glass-panel rounded-xl">
+                        <h3 className="text-xl font-bold text-white mb-4">Apply for this Position</h3>
+                        <ApplyForm jobId={job.id} jobTitle={job.title} />
+                    </div>
 
                 </div>
 
@@ -131,25 +128,6 @@ export default async function JobViewPage({ params }: Props) {
                 </div>
             </div>
         </div>
-            </div >
-
-        {/* === SDK INTEGRATION SCRIPT (MOCKING HOST INSERTION) === */ }
-        < script src = "/sdk.js" defer ></script >
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `
-                        window.addEventListener('load', function() {
-                            if (window.FinalRoundPlugin) {
-                                window.FinalRoundPlugin.init({
-                                    apiUrl: 'http://localhost:3000/api', // Mock API for now
-                                    environment: 'development'
-                                });
-                            }
-                        });
-                    `
-                }}
-            />
-        </div >
     );
 }
 

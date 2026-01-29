@@ -98,3 +98,34 @@ export const SEO_CONFIG = {
         include_query_params: false
     }
 } as const;
+
+// 7. Job Categories Configuration
+export const JOB_CATEGORIES: Record<string, string> = {
+    'software-engineering': 'Software Engineering',
+    'data-science': 'Data Science',
+    'product-management': 'Product Management',
+    'design': 'Design',
+    'sales-marketing': 'Sales & Marketing',
+    'customer-support': 'Customer Support',
+    'finance-legal': 'Finance & Legal',
+    'operations': 'Operations',
+};
+
+// 8. Export Helpers for Application Consumption
+export const SEO_THRESHOLDS = {
+    SUBCATEGORY: SEO_CONFIG.thresholds.subcategory_page,
+    LOCATION: SEO_CONFIG.thresholds.location_page,
+    MAIN_CATEGORY: SEO_CONFIG.thresholds.main_category_location
+};
+
+export function isMainCategory(slug: string): boolean {
+    return Object.keys(JOB_CATEGORIES).includes(slug);
+}
+
+export function isSubcategory(slug: string): boolean {
+    // If it's not a main category and relies on the dynamic matching logic
+    // For now, we assume if it's not in our explicit main list, it might be a subcategory 
+    // OR we could define a list. For safety, let's treat unknown slugs as subcategories 
+    // provided they don't match 'in-*' which is location.
+    return !isMainCategory(slug) && !slug.startsWith('in-') && slug !== 'remote';
+}

@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url is configured in prisma.config.ts via env("DATABASE_URL")
 }
 
 model Installation {
@@ -14,10 +13,114 @@ model Installation {
   domain            String?  @db.VarChar(255)
   installationToken String?  @map("installation_token")
   status            String   @default("active") @db.VarChar(50)
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
-  lastSeenAt        DateTime @default(now()) @map("last_seen_at") @db.Timestamptz
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastSeenAt        DateTime @default(now()) @map("last_seen_at") @db.Timestamptz(6)
   metadata          Json?    @default("{}")
 
   @@index([installationId])
   @@map("installations")
+}
+
+model Company {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  logo_url    String?
+  website_url String?
+  status      String   @default("unverified") @db.VarChar(50)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  jobs        Job[]
+
+  @@map("companies")
+}
+
+model Job {
+  id               String           @id @default(uuid()) @db.Uuid
+  title            String           @db.VarChar(255)
+  description      String
+  companyId        String           @map("company_id") @db.Uuid
+  slug             String           @unique @db.VarChar(500)
+  rawRequirements  Json?            @map("raw_requirements")
+  type             String           @default("Full-time") @db.VarChar(50)
+  location         String           @default("Remote") @db.VarChar(100)
+  salary           String?          @db.VarChar(100)
+  category         String?          @db.VarChar(100)
+  subcategory      String?          @db.VarChar(100)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  experienceLevel  String?          @map("experience_level") @db.VarChar(50)
+  salaryMax        Int?             @map("salary_max")
+  salaryMin        Int?             @map("salary_min")
+  status           String           @default("active") @db.VarChar(50)
+  updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  applications     Application[]
+  jobOutcomes      JobOutcome[]
+  jobTasks         JobTask[]
+  company          Company          @relation(fields: [companyId], references: [id])
+  signalProfile    SignalProfile?
+
+  @@map("jobs")
+}
+
+model Application {
+  id              String   @id @default(uuid()) @db.Uuid
+  jobId           String   @map("job_id") @db.Uuid
+  name            String   @db.VarChar(255)
+  email           String   @db.VarChar(255)
+  resumeUrl       String   @map("resume_url")
+  linkedinUrl     String?  @map("linkedin_url")
+  portfolioUrl    String?  @map("portfolio_url")
+  githubId        String?  @map("github_id")
+  leetcodeId      String?  @map("leetcode_id")
+  codeforcesId    String?  @map("codeforces_id")
+  coverLetter     String?  @map("cover_letter")
+  status          String   @default("pending") @db.VarChar(50)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  enrichmentData  Json?    @map("enrichment_data")
+  job             Job      @relation(fields: [jobId], references: [id])
+
+  @@index([jobId])
+  @@map("applications")
+}
+
+model JobOutcome {
+  id                  String      @id @default(uuid()) @db.Uuid
+  jobId               String      @map("job_id") @db.Uuid
+  description         String      @map("outcome_description")
+  successMetrics      Json?       @map("success_metrics")
+  failureConditions   Json?       @map("failure_conditions")
+  priorityLevel       Int         @default(1) @map("priority_level")
+  job                 Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobTasks            JobTask[]
+
+  @@map("job_outcomes")
+}
+
+model JobTask {
+  id                   String        @id @default(uuid()) @db.Uuid
+  jobId                String        @map("job_id") @db.Uuid
+  outcomeId            String?       @map("outcome_id") @db.Uuid
+  taskType             String        @map("task_type") @db.VarChar(50)
+  description          String
+  expectedArtifacts    Json?         @map("expected_artifacts")
+  evaluationCriteria   Json?         @map("evaluation_criteria")
+  difficultyLevel      Int           @default(1) @map("difficulty_level")
+  estimatedTimeHours   Float?        @map("estimated_time_hours")
+  job                  Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobOutcome           JobOutcome?   @relation(fields: [outcomeId], references: [id])
+
+  @@map("job_tasks")
+}
+
+model SignalProfile {
+  id                        String @id @default(uuid()) @db.Uuid
+  jobId                     String @unique @map("job_id") @db.Uuid
+  scopeControlWeight        Float  @map("scope_control_weight")
+  ambiguityHandlingWeight   Float  @map("ambiguity_handling_weight")
+  decisionQualityWeight     Float  @map("decision_quality_weight")
+  stabilityWeight           Float  @map("stability_weight")
+  learningRateWeight        Float  @map("learning_rate_weight")
+  job                       Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@map("signal_profiles")
 }

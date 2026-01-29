@@ -1,0 +1,60 @@
+
+> ainativejobboard@0.1.0 lint
+> eslint
+
+
+C:\ainativejobboard\app\admin\jobs\[jobId]\page.tsx
+  10:38  error    Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  29:8   warning  React Hook useEffect has a missing dependency: 'fetchDecomposition'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  41:23  error    Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  77:89  error    Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  92:58  error    Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  96:67  error    Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  96:72  warning  'j' is defined but never used                                                                                          @typescript-eslint/no-unused-vars
+
+C:\ainativejobboard\app\api\v1\jobs\[jobId]\decompose\route.ts
+  3:8  warning  'prisma' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\ainativejobboard\app\api\v1\jobs\[jobId]\decomposition\approve\route.ts
+   2:8   warning  'prisma' is defined but never used        @typescript-eslint/no-unused-vars
+  21:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  21:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\ainativejobboard\app\api\v1\jobs\[jobId]\decomposition\route.ts
+  25:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  25:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\ainativejobboard\app\jobs\[...slug]\page.tsx
+   2:10  warning  'JobCard' is defined but never used                        @typescript-eslint/no-unused-vars
+   3:10  warning  'notFound' is defined but never used                       @typescript-eslint/no-unused-vars
+   5:5   warning  'generateCategoryTitle' is defined but never used          @typescript-eslint/no-unused-vars
+   6:5   warning  'generateCategoryDescription' is defined but never used    @typescript-eslint/no-unused-vars
+   7:5   warning  'generateLocationTitle' is defined but never used          @typescript-eslint/no-unused-vars
+   8:5   warning  'generateCategoryLocationTitle' is defined but never used  @typescript-eslint/no-unused-vars
+   9:5   warning  'generateSubCategoryTitle' is defined but never used       @typescript-eslint/no-unused-vars
+  18:24  warning  'slug' is defined but never used                           @typescript-eslint/no-unused-vars
+  39:33  error    Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  50:42  warning  'params' is defined but never used                         @typescript-eslint/no-unused-vars
+
+C:\ainativejobboard\components\JobCard.tsx
+  24:11  warning  'companyLogo' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\ainativejobboard\lib\claude.ts
+  43:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\ainativejobboard\lib\db.ts
+  3:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\ainativejobboard\plugin-sdk\src\index.ts
+  50:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\ainativejobboard\public\sdk.js
+   20:15  warning  'n' is defined but never used                                          @typescript-eslint/no-unused-vars
+   20:18  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+   82:5   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  118:5   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  143:9   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  151:11  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+✖ 33 problems (11 errors, 22 warnings)
+
