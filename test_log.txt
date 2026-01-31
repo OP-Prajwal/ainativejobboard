@@ -1,0 +1,139 @@
+🌱 Seeding Test Data...
+ERROR: Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+🌱 Seeding Test Data...
+ERROR: Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+🌱 Seeding Test Data...
+✅ Seeded: Job 80582014-aea3-463e-b259-51b31c763496, App 70df7962-504f-4804-b170-3e0c91d002af
+
+🚀 Generating Phase 1 Task...
+ERROR: PrismaClientKnownRequestError: 
+Invalid `prisma.application.findUnique()` invocation in
+C:\Users\ASUS\Documents\files\hackathon\zenith-point-blank\ainativejobboard\lib\task-allocation\service.ts:15:54
+
+  12  */
+  13 async generateNextTask(applicationId: string) {
+  14     // 1. Fetch Application and Job Data
+→ 15     const application = await prisma.application.findUnique(
+The column `(not available)` does not exist in the current database.
+🌱 Seeding Test Data...
+✅ Seeded: Job fd6937c9-49ff-4e40-9b52-7aeff5d8582c, App f92847fb-5559-469b-854e-aea16044c9e9
+
+🚀 Generating Phase 1 Task...
+Task Type: simulation_phase_1
+Prompt: Design the core solution for a plugin system that runs untrusted code safely. Focus on the ideal sce...
+State Phase: 1
+✅ Project State persisted correctly.
+🌱 Seeding Test Data...
+✅ Seeded: Job f2bdd413-5a21-4469-87d0-ec3cb6df69ee, App c855ea0a-a939-4298-85a0-4da69ea06a81
+
+-----------------------------------
+🚀 Generating Phase 1 Task...
+-----------------------------------
+[Phase 1] Task Type: simulation_phase_1
+[Phase 1] Prompt: Design the core solution for a plugin system that runs untrusted code safely. Fo...
+[Phase 1] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 2
+
+-----------------------------------
+🚀 Generating Phase 2 Task...
+-----------------------------------
+[Phase 2] Task Type: simulation_phase_2
+[Phase 2] Prompt: You are to design a budget for the project. The project must achieve a 70% reduc...
+[Phase 2] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 3
+
+-----------------------------------
+🚀 Generating Phase 3 Task...
+-----------------------------------
+[Phase 3] Task Type: simulation_phase_3
+[Phase 3] Prompt: You are to design a system that can handle 100x traffic growth for a plugin syst...
+[Phase 3] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 4
+
+-----------------------------------
+🚀 Generating Phase 4 Task...
+-----------------------------------
+[Phase 4] Task Type: simulation_phase_4
+[Phase 4] Prompt: You are tasked with integrating your plugin system with a poorly-designed legacy...
+[Phase 4] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 5
+
+-----------------------------------
+🚀 Generating Phase 5 Task...
+-----------------------------------
+[Phase 5] Task Type: simulation_phase_5
+[Phase 5] Prompt: You are a mid-level developer tasked with building a plugin system that runs unt...
+[Phase 5] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 6
+
+-----------------------------------
+🚀 Generating Phase 6 Task...
+-----------------------------------
+[Phase 6] Task Type: simulation_phase_6
+[Phase 6] Prompt: You are in the Pivot phase. The business goal has shifted. Previously, you integ...
+[Phase 6] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 7
+
+-----------------------------------
+🚀 Generating Phase 7 Task...
+-----------------------------------
+[Phase 7] Task Type: simulation_phase_7
+[Phase 7] Prompt: You are conducting an audit of the project's decisions. The project is currently...
+[Phase 7] Active Constraints: 
+🌱 Seeding Test Data...
+✅ Seeded: Job 74b609ef-0238-4a4d-8809-09eeeac61538, App 01490ee2-a69c-40cc-9455-90f9d0365e3b
+
+-----------------------------------
+🚀 Generating Phase 1 Task...
+-----------------------------------
+[Phase 1] Task Type: simulation_phase_1
+[Phase 1] Prompt: Design the core plugin architecture for a Rust-based system that will execute un...
+[Phase 1] Active Constraints: 
+➡️  Simulating completion... Advancing to Phase 2
+
+-----------------------------------
+🚀 Generating Phase 2 Task...
+-----------------------------------
+[Phase 2] Task Type: simulation_phase_2
+[Phase 2] Prompt: You are to optimize the plugin system's resource usage by a 70% reduction. Prior...
+[Phase 2] Active Constraints: Budget reduction: 70% cost/resource reduction
+➡️  Simulating completion... Advancing to Phase 3
+
+-----------------------------------
+🚀 Generating Phase 3 Task...
+-----------------------------------
+[Phase 3] Task Type: simulation_phase_3
+[Phase 3] Prompt: You are tasked with scaling the plugin system to handle a 100x increase in traff...
+[Phase 3] Active Constraints: Budget reduction: 70% cost/resource reduction
+➡️  Simulating completion... Advancing to Phase 4
+
+-----------------------------------
+🚀 Generating Phase 4 Task...
+-----------------------------------
+[Phase 4] Task Type: simulation_phase_4
+[Phase 4] Prompt: You are tasked with integrating the plugin system with a legacy system that has ...
+[Phase 4] Active Constraints: Budget reduction: 70% cost/resource reduction
+➡️  Simulating completion... Advancing to Phase 5
+
+-----------------------------------
+🚀 Generating Phase 5 Task...
+-----------------------------------
+[Phase 5] Task Type: simulation_phase_5
+[Phase 5] Prompt: You are tasked with addressing the failure scenario of a critical dependency in ...
+[Phase 5] Active Constraints: Budget reduction: 70% cost/resource reduction
+➡️  Simulating completion... Advancing to Phase 6
+
+-----------------------------------
+🚀 Generating Phase 6 Task...
+-----------------------------------
+[Phase 6] Task Type: simulation_phase_6
+[Phase 6] Prompt: You are tasked with pivoting the plugin system's business goal to support a new ...
+[Phase 6] Active Constraints: Budget reduction: 70% cost/resource reduction
+➡️  Simulating completion... Advancing to Phase 7
+
+-----------------------------------
+🚀 Generating Phase 7 Task...
+-----------------------------------
+[Phase 7] Task Type: simulation_phase_7
+[Phase 7] Prompt: You are to conduct a comprehensive audit of the plugin system's architecture and...
+[Phase 7] Active Constraints: Budget reduction: 70% cost/resource reduction

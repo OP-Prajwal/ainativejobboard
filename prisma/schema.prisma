@@ -57,6 +57,8 @@ model Job {
   jobTasks         JobTask[]
   company          Company          @relation(fields: [companyId], references: [id])
   signalProfile    SignalProfile?
+  assessmentScheduledAt DateTime?      @map("assessment_scheduled_at") @db.Timestamptz(6)
+  assessmentConfig      Json?          @map("assessment_config")
 
   @@map("jobs")
 }
@@ -78,6 +80,7 @@ model Application {
   updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
   enrichmentData  Json?    @map("enrichment_data")
   job             Job      @relation(fields: [jobId], references: [id])
+  taskAssignments TaskAssignment[]
 
   @@index([jobId])
   @@map("applications")
@@ -97,17 +100,20 @@ model JobOutcome {
 }
 
 model JobTask {
-  id                   String        @id @default(uuid()) @db.Uuid
-  jobId                String        @map("job_id") @db.Uuid
-  outcomeId            String?       @map("outcome_id") @db.Uuid
-  taskType             String        @map("task_type") @db.VarChar(50)
+  id                   String           @id @default(uuid()) @db.Uuid
+  jobId                String           @map("job_id") @db.Uuid
+  outcomeId            String?          @map("outcome_id") @db.Uuid
+  taskType             String           @map("task_type") @db.VarChar(50)
   description          String
-  expectedArtifacts    Json?         @map("expected_artifacts")
-  evaluationCriteria   Json?         @map("evaluation_criteria")
-  difficultyLevel      Int           @default(1) @map("difficulty_level")
-  estimatedTimeHours   Float?        @map("estimated_time_hours")
-  job                  Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  jobOutcome           JobOutcome?   @relation(fields: [outcomeId], references: [id])
+  expectedArtifacts    Json?            @map("expected_artifacts")
+  evaluationCriteria   Json?            @map("evaluation_criteria")
+  difficultyLevel      Int              @default(1) @map("difficulty_level")
+  estimatedTimeHours   Float?           @map("estimated_time_hours")
+  taskInvariants       Json?            @map("task_invariants")
+  starterCode          String?          @map("starter_code") @db.Text
+  job                  Job              @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobOutcome           JobOutcome?      @relation(fields: [outcomeId], references: [id])
+  taskAssignments      TaskAssignment[]
 
   @@map("job_tasks")
 }
@@ -123,4 +129,55 @@ model SignalProfile {
   job                       Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@map("signal_profiles")
+}
+
+model TaskAssignment {
+  id                     String    @id @default(uuid()) @db.Uuid
+  applicationId          String    @map("application_id") @db.Uuid
+  taskId                 String    @map("task_id") @db.Uuid
+  
+  // Lifecycle
+  status                 String    @default("PENDING") @db.VarChar(50)
+  scheduledAt            DateTime? @map("scheduled_at") @db.Timestamptz(6)
+  startedAt              DateTime? @map("started_at") @db.Timestamptz(6)
+  submittedAt            DateTime? @map("submitted_at") @db.Timestamptz(6)
+  timeLimitMinutes       Int       @default(60) @map("time_limit_minutes")
+  timeTakenSeconds       Int?      @map("time_taken_seconds")
+  
+  // Transparency Fields (Candidate-provided)
+  initialPrompt          String?   @map("initial_prompt") @db.Text
+  aiDraft                String?   @map("ai_draft") @db.Text
+  finalSubmission        String?   @map("final_submission") @db.Text
+  refinementExplanation  String?   @map("refinement_explanation") @db.Text
+  unchangedExplanation   String?   @map("unchanged_explanation") @db.Text
+  
+  // AI Evaluation Fields
+  aiScore                Int?      @map("ai_score")
+  confidence             Float?
+  uncertaintyReasons     Json?     @map("uncertainty_reasons")
+  diffSummary            Json?     @map("diff_summary")
+  aiFeedback             String?   @map("ai_feedback") @db.Text
+  strongestPositive      String?   @map("strongest_positive") @db.Text
+  strongestNegative      String?   @map("strongest_negative") @db.Text
+  whatWouldChangeScore   String?   @map("what_would_change_score") @db.Text
+  evaluationVersion      Int       @default(1) @map("evaluation_version")
+  
+  // Human Override Fields
+  humanScore             Int?      @map("human_score")
+  humanOverrideReason    String?   @map("human_override_reason") @db.Text
+  humanReviewedAt        DateTime? @map("human_reviewed_at") @db.Timestamptz(6)
+  reviewedBy             String?   @map("reviewed_by") @db.VarChar(255)
+  requiresHumanReview    Boolean   @default(false) @map("requires_human_review")
+  
+  // Relations
+  application            Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  task                   JobTask     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  
+  createdAt              DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  
+  @@unique([applicationId, taskId])
+  @@index([applicationId])
+  @@index([status])
+  @@map("task_assignments")
 }

@@ -111,11 +111,35 @@ export default async function JobViewPage({ params }: Props) {
                                 <span className="text-right text-slate-200">{job.subcategory}</span>
                             </li>
                             <li className="flex justify-between">
-                                <span>Type</span>
-                                <span className="text-right text-slate-200">{job.type}</span>
+                                <span className="text-slate-400">Type</span>
+                                <span className="text-right text-slate-200 font-medium">{job.type}</span>
+                            </li>
+                            <li className="flex justify-between">
+                                <span className="text-slate-400">Experience</span>
+                                <span className="text-right text-slate-200 font-medium">{job.experienceLevel || 'Not Specified'}</span>
+                            </li>
+                            <li className="flex justify-between">
+                                <span className="text-slate-400">Salary</span>
+                                <span className="text-right text-slate-200 font-medium">
+                                    {job.salary || (job.salaryMin && job.salaryMax ? `$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}` : 'Competitive')}
+                                </span>
                             </li>
                         </ul>
                     </div>
+
+                    {/* Tech Stack from rawRequirements */}
+                    {(job.rawRequirements as any)?.stack && (
+                        <div className="glass-panel p-6 rounded-xl">
+                            <h3 className="font-bold text-white mb-4">Requirements</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {(job.rawRequirements as any).stack.map((tech: string, i: number) => (
+                                    <span key={i} className="px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded-full border border-slate-700">
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div className="glass-panel p-6 rounded-xl">
                         <h3 className="font-bold text-white mb-4">About {job.company.name}</h3>
                         <p className="text-sm text-slate-400 mb-4">

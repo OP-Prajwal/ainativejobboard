@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export function ApplyForm({ jobId, jobTitle }: { jobId: string, jobTitle: string }) {
     const [applied, setApplied] = useState(false);
+    const [simulationUrl, setSimulationUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
@@ -36,6 +37,10 @@ export function ApplyForm({ jobId, jobTitle }: { jobId: string, jobTitle: string
 
             if (!res.ok) throw new Error(await res.text());
 
+            const data = await res.json();
+            if (data.simulationUrl) {
+                setSimulationUrl(data.simulationUrl);
+            }
             setApplied(true);
         } catch (err: any) {
             setError(err.message || 'Failed to submit application');
@@ -45,17 +50,33 @@ export function ApplyForm({ jobId, jobTitle }: { jobId: string, jobTitle: string
     };
 
     if (applied) {
+        if (simulationUrl) {
+            return (
+                <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center animated-entry">
+                    <h3 className="text-xl font-bold text-blue-400 mb-2">🎉 Profile Shortlisted!</h3>
+                    <p className="text-slate-300 mb-4">
+                        Our Belief Engine has matched your profile for the next round.
+                        <br />
+                        You have been invited to the <strong>Interactive Work Simulation</strong>.
+                    </p>
+                    <a
+                        href={simulationUrl}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/25"
+                    >
+                        Start Simulation Now →
+                    </a>
+                </div>
+            );
+        }
+
         return (
             <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-xl text-center">
-                <h3 className="text-xl font-bold text-green-400 mb-2">Application Submitted! 🎉</h3>
+                <h3 className="text-xl font-bold text-green-400 mb-2">Application Submitted</h3>
                 <p className="text-slate-300">
                     We have received your application for <strong>{jobTitle}</strong>.
                     <br />
-                    Our AI is now analyzing your profile. Good luck!
+                    Our system is currently reviewing your profile. You will be notified via email.
                 </p>
-                <div className="mt-4 text-sm text-slate-500">
-                    (Administrative verification: Go to Admin Dashboard to run the analysis)
-                </div>
             </div>
         );
     }

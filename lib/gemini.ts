@@ -25,8 +25,8 @@ export async function complete(prompt: string, options: AICompletionOptions = {}
         try {
             // Configure model
             const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-flash",
-                systemInstruction: options.system,
+                model: "gemini-2.0-flash",
+                ...(options.system ? { systemInstruction: options.system } : {}),
                 generationConfig: {
                     temperature: options.temperature ?? 0.1,
                     maxOutputTokens: options.max_tokens,

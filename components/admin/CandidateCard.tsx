@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
-import { Github, Code, ExternalLink, Calendar, Star, GitCommit, BrainCircuit, Loader2, AlertTriangle } from "lucide-react";
+import { Github, ExternalLink, Star, GitCommit, BrainCircuit, Loader2, AlertTriangle } from "lucide-react";
 import { evaluateCandidateAction } from "@/app/actions/evaluate-candidate";
+import { shortlistCandidate, rejectCandidate } from "@/app/actions/application";
 
 // Types based on our schema
 type EnrichmentData = {
@@ -35,8 +36,18 @@ type EnrichmentData = {
     };
 };
 
+type TaskAssignment = {
+    id: string;
+    status: 'PENDING' | 'IN_PROGRESS' | 'SUBMITTED' | 'GRADED';
+    aiScore?: number | null;
+    confidence?: number | null;
+    aiFeedback?: string | null;
+    requiresHumanReview?: boolean;
+};
+
 type Application = {
     id: string;
+    jobId: string;
     name: string;
     email: string;
     resumeUrl: string;
@@ -44,7 +55,8 @@ type Application = {
     githubId?: string | null;
     status: string;
     createdAt: Date;
-    enrichmentData: any; // Typed above
+    enrichmentData: any;
+    taskAssignments?: TaskAssignment[];
 };
 
 type EvaluationReport = {
@@ -81,6 +93,16 @@ export function CandidateCard({ application }: { application: Application }) {
         } finally {
             setEvaluating(false);
         }
+    };
+
+    const handleShortlist = async () => {
+        if (!confirm("Shortlist this candidate?")) return;
+        await shortlistCandidate(application.id, application.jobId);
+    };
+
+    const handleReject = async () => {
+        if (!confirm("Reject this candidate?")) return;
+        await rejectCandidate(application.id, application.jobId);
     };
 
     // Score color based on value
@@ -140,8 +162,8 @@ export function CandidateCard({ application }: { application: Application }) {
                             onClick={handleEvaluation}
                             disabled={evaluating}
                             className={`w-full flex items-center justify-center gap-2 p-3 mt-4 border rounded-lg text-sm transition-colors disabled:opacity-50 ${report
-                                    ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700 text-slate-300'
-                                    : 'bg-violet-600/10 border-violet-500/20 hover:bg-violet-600/20 text-violet-400'
+                                ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700 text-slate-300'
+                                : 'bg-violet-600/10 border-violet-500/20 hover:bg-violet-600/20 text-violet-400'
                                 }`}
                         >
                             {evaluating ? <Loader2 size={14} className="animate-spin" /> : <BrainCircuit size={14} />}
@@ -241,10 +263,10 @@ export function CandidateCard({ application }: { application: Application }) {
                 </div>
 
                 {/* Recent Activity Feed */}
-                {data?.github?.stats?.recentActivity?.length > 0 && (
+                {data?.github?.stats?.recentActivity && data.github.stats.recentActivity.length > 0 && (
                     <div className="mt-6 pt-6 border-t border-white/5">
                         <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Recent High-Impact Activity</h4>
-                        <div className="space-y-3">
+                        <div className="space-y-3 max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                             {data.github.stats.recentActivity.map((activity, i) => (
                                 <div key={i} className="flex gap-3 text-sm">
                                     <div suppressHydrationWarning className="w-24 text-slate-500 text-xs py-1 text-right shrink-0 font-mono">
@@ -267,11 +289,17 @@ export function CandidateCard({ application }: { application: Application }) {
             </div>
 
             {/* Actions Footer */}
-            <div className="bg-slate-950 p-4 flex justify-end gap-3 border-t border-slate-800">
-                <button className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+            <div className="bg-slate-950 p-4 border-t border-slate-800 flex justify-end gap-3">
+                <button
+                    onClick={handleReject}
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                >
                     Reject
                 </button>
-                <button className="px-4 py-2 rounded-lg text-sm font-medium bg-violet-600 text-white hover:bg-violet-500 transition-colors shadow-lg shadow-violet-900/20">
+                <button
+                    onClick={handleShortlist}
+                    className="px-4 py-2 rounded-lg text-sm font-medium bg-violet-600 text-white hover:bg-violet-500 transition-colors shadow-lg shadow-violet-900/20"
+                >
                     Shortlist Candidate
                 </button>
             </div>

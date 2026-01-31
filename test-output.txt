@@ -1,0 +1,76 @@
+﻿node.exe : npm warn Unknown env config "python". This will stop working 
+in the next major version of npm.
+At line:1 char:1
++ & "C:\nvm4w\nodejs/node.exe" "C:\nvm4w\nodejs/node_modules/npm/bin/np 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version o 
+   f npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[1m
+≡ƒº¬ AI-Native Assessment Flow Test
+[0m
+
+[1mΓ₧ñ 1. Creating test data...[0m[0m
+[36mΓä╣∩╕Å  Using existing test company[0m
+[32mΓ£à Created test job: d9d1cff6-beec-437a-a5c2-878022cca64f[0m
+[32mΓ£à Created test task: b933590a-b8e4-4449-bb01-d630e448b7ed[0m
+[32mΓ£à Created test application: 0112c8cd-c1d2-4bec-8515-af2f9cdf22b3[0m
+
+[1mΓ₧ñ 2. Assigning task to application...[0m[0m
+[32mΓ£à Task assigned: 5968888d-88af-4b70-a416-4635c9e42e0b[0m
+[32mΓ£à Assignment status: PENDING Γ£ô[0m
+
+[1mΓ₧ñ 3. Starting assessment...[0m[0m
+[32mΓ£à Assessment started at: Fri Jan 30 2026 04:11:10 GMT+0530 (India Standard Time)[0m
+[32mΓ£à startAssessment idempotency verified Γ£ô[0m
+[32mΓ£à Assignment status: IN_PROGRESS Γ£ô[0m
+
+[1mΓ₧ñ 4. Submitting assessment...[0m[0m
+[32mΓ£à Submitted at: Fri Jan 30 2026 04:11:11 GMT+0530 (India Standard Time)[0m
+[32mΓ£à Time taken: 1 seconds[0m
+[32mΓ£à Assignment status: SUBMITTED Γ£ô[0m
+
+[1mΓ₧ñ 5. Running AI grading...[0m[0m
+Gemini API Error (Attempt 1/3): [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gem
+ini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash 
+is not found for API version v1beta, or is not supported for 
+generateContent. Call ListModels to see the list of available models and 
+their supported methods.
+Gemini API Error (Attempt 2/3): [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gem
+ini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash 
+is not found for API version v1beta, or is not supported for 
+generateContent. Call ListModels to see the list of available models and 
+their supported methods.
+Gemini API Error (Attempt 3/3): [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gem
+ini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash 
+is not found for API version v1beta, or is not supported for 
+generateContent. Call ListModels to see the list of available models and 
+their supported methods.
+[gradeSubmission] Error: Error: Gemini API Failed after 3 attempts: 
+[GoogleGenerativeAI Error]: Error fetching from https://generativelanguag
+e.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 
+Not Found] models/gemini-1.5-flash is not found for API version v1beta, 
+or is not supported for generateContent. Call ListModels to see the list 
+of available models and their supported methods.
+    at complete (C:\Users\ASUS\Documents\files\hackathon\zenith-point-bla
+nk\ainativejobboard\lib\gemini.ts:46:23)
+    at process.processTicksAndRejections 
+(node:internal/process/task_queues:103:5)
+    at async gradeSubmission (C:\Users\ASUS\Documents\files\hackathon\zen
+ith-point-blank\ainativejobboard\lib\assessment\assessment-grader.ts:48:2
+6)
+    at async gradeAssessment (C:\Users\ASUS\Documents\files\hackathon\zen
+ith-point-blank\ainativejobboard\app\actions\assessment.ts:257:29)
+    at async main (C:\Users\ASUS\Documents\files\hackathon\zenith-point-b
+lank\ainativejobboard\scripts\test-assessment-flow.ts:280:29)
+[31mΓ¥î Test failed: Error: Grading failed: Grading failed[0m
+Error: Grading failed: Grading failed
+    at main (C:\Users\ASUS\Documents\files\hackathon\zenith-point-blank\a
+inativejobboard\scripts\test-assessment-flow.ts:283:19)
+    at process.processTicksAndRejections 
+(node:internal/process/task_queues:103:5)
